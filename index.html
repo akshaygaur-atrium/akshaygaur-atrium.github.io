@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure full viewport height */
+            margin: 0;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh; /* Make sure it takes up the full viewport height */
+        }
+
+
+        #chat-container {
+            flex-grow: 1; /* Allow chat container to take up available space */
+            overflow-y: scroll;
+            background-color: #f8f9fa; /* Light gray background for chat */
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 12px 16px;
+            border-radius: 12px; /* More rounded corners */
+            max-width: 70%;
+            clear: both;
+        }
+
+        .message.user {
+            background-color: #dcf8c6; /* Light green for user */
+            float: right;
+        }
+
+        .message.bot {
+            background-color: #ffffff; /* White for bot */
+            float: left;
+        }
+
+        #message-input-area {
+            background-color: #fff; /* White background for input area */
+            padding: 15px;
+            border-top: 1px solid #ced4da; /* Subtle border */
+        }
+
+        #message-input {
+            border-radius: 20px; /* Rounded input field */
+            padding-left: 15px; /* Add some left padding */
+        }
+
+        #send-button {
+            border-radius: 20px; /* Rounded send button */
+            margin-left: 5px;
+        }
+        .chat-sidebar {
+            width: 15vw; /* Adjust as needed */
+            background-color: #f0f0f0; /* Example sidebar color */
+            padding: 20px;
+            border-right: 1px solid #ddd; /* Add a right border */
+            overflow-y: auto; /* Add scrolling if content overflows */
+        }
+
+        .chat-content {
+            flex-grow: 1; /* Make the chat area expand */
+            display: flex;
+            flex-direction: column; /* Align content vertically */
+        }
+
+        .chat-sidebar p {
+            margin-bottom: 10px; /* Adjust spacing between paragraphs */
+            padding: 10px; /* Add some padding around the text */
+            background-color: #fff; /* White background for paragraphs */
+            border-radius: 5px; /* Add rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle bottom shadow */
+            cursor: pointer; /* Make it look clickable */
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth transitions */
+        }
+          .chat-sidebar p:hover{
+            transform: translateY(-2px); /* Move up slightly on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slightly bigger shadow on hover */
+
+          }
+        .chat-sidebar p.active { /* Style for the active paragraph */
+            background-color: #e0f2f7; /* Light blue background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Slightly darker shadow */
+        }
+        df-messenger {
+            z-index: 999;
+            position: fixed;
+            --df-messenger-font-color: #000;
+            --df-messenger-font-family: Google Sans;
+            --df-messenger-chat-background: #fcf5f3;
+            --df-messenger-message-user-background: #d3e3fd;
+            --df-messenger-message-bot-background: #fff;
+            bottom: 0px;
+            bottom: 0px;
+            right: 0px; 
+            width: 85vw;
+            height: 100vh;
+          }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="chat-sidebar">
+            <h2><img width="216" height="43" src="https://atrium.ai/wp-content/uploads/2021/05/Atrium_FullColor_Horizontal.svg"></h2>
+            <br>
+            <!-- <p class="active">First Conversation</p>
+            <p>Second Conversation</p>
+            <p>Third Conversation</p> -->
+        </div>
+        <div class="chat-content">
+            <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+            <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js"></script>
+            <df-messenger
+            
+            project-id="noted-sandbox-449310-j5"
+            agent-id="f8e1c6fc-81c0-499c-89c9-a07406f969e5"
+            language-code="en"
+            max-query-length="-1"
+            
+            >
+            <df-messenger-chat
+            chat-title="Atrium Agent"  
+            bot-writing-text="Just a sec..."
+            >
+            </df-messenger-chat>
+            </df-messenger>
+            <!-- <div id="chat-container">
+
+            </div>
+            <div id="message-input-area">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="message-input" placeholder="Type your message...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" id="send-button">Send</button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let chatBubble
+        $(document).ready(function () {
+            // ... (other JavaScript code)
+
+            // Add click event to paragraphs in the sidebar
+            $('.chat-sidebar p').click(function () {
+                // Remove active class from all paragraphs
+                $('.chat-sidebar p').removeClass('active');
+
+                // Add active class to the clicked paragraph
+                $(this).addClass('active');
+
+                // You can add more logic here to load the selected conversation, etc.
+                console.log("Clicked on:", $(this).text());
+            });
+            window.addEventListener('df-messenger-loaded', () => {
+                console.log("df-messenger-loaded");
+            });
+            window.addEventListener('df-messenger-error', function (event) {
+                console.log("df-messenger-error");
+                console.log(event);
+
+            });
+            window.addEventListener('df-request-sent', function (event) {
+                console.log("df-request-sent");
+                console.log(event);
+
+            });
+            window.addEventListener('df-response-received', function (event) {
+                console.log("df-response-received");
+                console.log(event);
+
+            });
+            window.addEventListener('df-user-input-entered', function (event) {
+                console.log("df-user-input-entered");
+                console.log(event);
+
+            });
+        });
+   
+    </script>
+   
+
+</body>
+
+</html>
